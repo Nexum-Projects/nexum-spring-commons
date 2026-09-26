@@ -2,8 +2,7 @@
 
 Librería para APIs REST con Spring Boot: respuestas, paginación, manejo de errores, rate limit y búsqueda.
 
-> **Estado: en desarrollo** (`0.1.0-SNAPSHOT`). Todavía no hay una versión publicada y la API descrita en
-> "Uso previsto" puede cambiar hasta `v1.0.0`.
+> **Versión actual:** `v1.0.0`. Cambios en [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Por qué existe
 
@@ -26,7 +25,7 @@ usan responden igual.
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
-Estado: todos los módulos implementados y probados; pendiente la primera versión publicada.
+Todos los módulos están implementados y probados.
 
 ## Qué no incluye
 
@@ -42,8 +41,7 @@ datos. Esas piezas dependen de cada aplicación.
 
 ## Instalación
 
-Estará disponible desde la primera versión publicada, a través de [JitPack](https://jitpack.io). En el `pom.xml`
-de la aplicación:
+Se distribuye por [JitPack](https://jitpack.io). En el `pom.xml` de la aplicación:
 
 ```xml
 <repositories>
@@ -57,14 +55,12 @@ de la aplicación:
   <dependency>
     <groupId>com.github.Nexum-Projects</groupId>
     <artifactId>nexum-spring-commons</artifactId>
-    <version>v1.0.0</version> <!-- usar la última versión publicada -->
+    <version>v1.0.0</version>
   </dependency>
 </dependencies>
 ```
 
-## Uso previsto
-
-> Ejemplos del diseño. Se confirman con cada módulo terminado.
+## Uso
 
 **Códigos de error propios de cada aplicación.** El nombre del enum es el código que recibe el cliente y el estado
 HTTP viaja con el código, así que no hace falta modificar el manejador de errores:

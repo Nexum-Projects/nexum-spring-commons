@@ -5,6 +5,8 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-26
+
 ### Added
 
 - `ErrorResponses.write(...)`: escribe el `ErrorDTO` estándar desde filtros (JWT, rate limit) sin armar el JSON a mano.

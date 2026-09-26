@@ -5,6 +5,18 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+### Added
+
+- `ErrorResponses.write(...)`: escribe el `ErrorDTO` estándar desde filtros (JWT, rate limit) sin armar el JSON a mano.
+- `RestAuthenticationEntryPoint` (401) y `RestAccessDeniedHandler` (403) con el formato de error estándar; la
+  autoconfiguración los registra y la aplicación los conecta en su `SecurityFilterChain`.
+- `TokenUtils`: token aleatorio URL-safe y hash SHA-256 para tokens de un solo uso.
+
+### Changed
+
+- `@Username` valida la forma normalizada del valor (recortada y en minúsculas si la regla está activa): `Maria_Lopez`
+  se acepta y el service guarda `maria_lopez`. Antes se rechazaba por las mayúsculas.
+
 ## [1.2.0] - 2026-09-26
 
 ### Added

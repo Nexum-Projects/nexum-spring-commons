@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 
 /**
  * Valida un username con la regla de {@link UsernamePolicy} (propiedades {@code nexum.commons.username.*}).
+ * Valida la forma normalizada ({@link UsernamePolicy#normalize}): el service debe guardar el valor normalizado.
  * {@code null} es válido: combinar con {@code @NotBlank} si el campo es obligatorio.
  */
 @Documented

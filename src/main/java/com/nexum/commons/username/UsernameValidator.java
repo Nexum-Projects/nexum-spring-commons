@@ -22,7 +22,8 @@ public class UsernameValidator implements ConstraintValidator<Username, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || policy.isValid(value)) {
+        // Se valida la forma normalizada: " Maria_Lopez " se acepta porque se guarda como "maria_lopez".
+        if (value == null || policy.isValid(policy.normalize(value))) {
             return true;
         }
         context.disableDefaultConstraintViolation();

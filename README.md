@@ -23,6 +23,7 @@ usan responden igual.
 | Paginación | `com.nexum.commons.pagination` | Parámetros de consulta (`page`, `limit`, `order`, `orderBy`, `query`, `pagination`) con un tope de `limit`, y `Paging.find(...)` para armar un listado en una línea |
 | Búsqueda | `com.nexum.commons.search` | Especificaciones de Spring Data JPA para filtrar por estado y buscar texto sin distinguir acentos |
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
+| Seguridad | `com.nexum.commons.security` | `RestAuthenticationEntryPoint` (401) y `RestAccessDeniedHandler` (403) con el formato de error estándar, y `TokenUtils` para tokens de un solo uso |
 | Username | `com.nexum.commons.username` | Regla de nombre de usuario tipo slug: anotación `@Username` y `UsernamePolicy`, activable y configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
@@ -134,8 +135,29 @@ nexum.commons.username.pattern=^[a-z][a-z0-9_]{2,31}$
 nexum.commons.username.message=Username must be 3-32 characters: start with a letter, then lowercase letters, digits or underscore
 ```
 
-`null` es válido para `@Username`: combinarlo con `@NotBlank` si el campo es obligatorio. Si un frontend valida la
+Se valida la forma normalizada: `" Maria_Lopez "` se acepta y el service guarda `maria_lopez`. `null` es válido para
+`@Username`: combinarlo con `@NotBlank` si el campo es obligatorio. Si un frontend valida la
 misma regla, cambiarla allí también al desactivarla o modificarla.
+
+**Errores 401 y 403 con el mismo formato.** La autoconfiguración registra los dos handlers; la aplicación los
+conecta en su `SecurityFilterChain`:
+
+```java
+http.exceptionHandling(e -> e
+        .authenticationEntryPoint(restAuthenticationEntryPoint)   // 401 UNAUTHORIZED
+        .accessDeniedHandler(restAccessDeniedHandler));           // 403 FORBIDDEN
+```
+
+En un filtro propio (por ejemplo el de JWT), `ErrorResponses.write(response, CommonErrorCode.UNAUTHORIZED, "…")`
+escribe el mismo `ErrorDTO` sin armar el JSON a mano.
+
+**Tokens de un solo uso** (reset de contraseña, verificación de email, refresh): se envía el valor aleatorio y en base
+de datos se guarda su hash.
+
+```java
+String raw = TokenUtils.generateUrlSafeToken(32);   // 43 caracteres URL-safe
+token.setTokenHash(TokenUtils.sha256Hex(raw));
+```
 
 **Rate limit.** Limita los `POST` bajo un prefijo por IP y ruta, y el login además por el email del cuerpo. Al
 superar el límite responde `429` con `Retry-After` y el formato de error estándar. Valores por defecto:

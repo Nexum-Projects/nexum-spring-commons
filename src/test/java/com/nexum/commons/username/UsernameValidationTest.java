@@ -35,6 +35,15 @@ class UsernameValidationTest {
     }
 
     @Test
+    void validatesTheNormalizedValue() {
+        runner.run(context -> {
+            Validator validator = context.getBean(Validator.class);
+            assertThat(validator.validate(new RegisterRequest("  DanielTistoj1 "))).isEmpty();
+            assertThat(validator.validate(new RegisterRequest("Maria Lopez"))).hasSize(1);
+        });
+    }
+
+    @Test
     void canBeDisabledFromProperties() {
         runner.withPropertyValues("nexum.commons.username.enabled=false").run(context ->
                 assertThat(context.getBean(Validator.class).validate(new RegisterRequest("María López"))).isEmpty());

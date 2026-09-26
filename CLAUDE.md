@@ -13,7 +13,8 @@ REST. Se distribuye por JitPack (`com.github.Nexum-Projects:nexum-spring-commons
 
 | Paquete | Contenido |
 |---|---|
-| `error` | `ErrorCode` (interfaz: `name()` + `httpStatus()`), `CommonErrorCode`, `BusinessException`, `NotFoundException`, `ErrorDTO`, `GlobalExceptionHandler` |
+| `error` | `ErrorCode` (interfaz: `name()` + `httpStatus()`), `CommonErrorCode`, `BusinessException`, `NotFoundException`, `ErrorDTO`, `GlobalExceptionHandler`, `ErrorResponses` (escribir un `ErrorDTO` desde filtros) |
+| `security` | `RestAuthenticationEntryPoint` (401), `RestAccessDeniedHandler` (403), `TokenUtils` |
 | `response` | `PageDTO`, `ListDTO`, `PageDetailDTO`, `PageMetaDTO`, `DataResponse` (todos `record`) |
 | `pagination` | Parámetros base (tope de `limit` en 100) y `Paging.find(...)` |
 | `search` | `SearchSpecificationUtils` (sin acentos con `unaccent`, comodines de `LIKE` escapados) |

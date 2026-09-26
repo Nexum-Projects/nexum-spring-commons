@@ -3,6 +3,8 @@ package com.nexum.commons.autoconfigure;
 import com.nexum.commons.error.GlobalExceptionHandler;
 import com.nexum.commons.ratelimit.RateLimitFilter;
 import com.nexum.commons.ratelimit.RateLimitProperties;
+import com.nexum.commons.security.RestAccessDeniedHandler;
+import com.nexum.commons.security.RestAuthenticationEntryPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -25,6 +27,13 @@ class CommonsAutoConfigurationTest {
             assertThat(properties.excludedPaths()).containsExactly("/api/v1/auth/change-password");
             assertThat(properties.authLimit()).isEqualTo(10);
         });
+    }
+
+    @Test
+    void registersTheRestSecurityHandlers() {
+        runner.run(context -> assertThat(context)
+                .hasSingleBean(RestAuthenticationEntryPoint.class)
+                .hasSingleBean(RestAccessDeniedHandler.class));
     }
 
     @Test

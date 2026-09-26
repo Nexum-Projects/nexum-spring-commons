@@ -5,6 +5,8 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-09-26
+
 ### Added
 
 - Módulo de username (`com.nexum.commons.username`): `@Username` (Bean Validation) y `UsernamePolicy` (normaliza a

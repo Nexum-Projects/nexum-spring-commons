@@ -2,7 +2,7 @@
 
 Librería para APIs REST con Spring Boot: respuestas, paginación, manejo de errores, rate limit y búsqueda.
 
-> **Versión actual:** `v1.1.0`. Cambios en [`CHANGELOG.md`](CHANGELOG.md).
+> **Versión actual:** `v1.2.0`. Cambios en [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Por qué existe
 
@@ -56,7 +56,7 @@ Se distribuye por [JitPack](https://jitpack.io). En el `pom.xml` de la aplicaci�
   <dependency>
     <groupId>com.github.Nexum-Projects</groupId>
     <artifactId>nexum-spring-commons</artifactId>
-    <version>v1.1.0</version>
+    <version>v1.2.0</version>
   </dependency>
 </dependencies>
 ```

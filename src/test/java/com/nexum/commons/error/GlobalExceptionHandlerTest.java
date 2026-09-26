@@ -1,12 +1,14 @@
 package com.nexum.commons.error;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.MethodParameter;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -67,6 +69,42 @@ class GlobalExceptionHandlerTest {
         assertEquals("BAD_REQUEST_VALIDATION_ERROR", response.getBody().code());
         assertEquals(Map.of("name", "name is required", "email", "invalid"),
                 response.getBody().details().get("fieldErrors"));
+    }
+
+    /** Parámetros de consulta: el setter valida y lanza IllegalArgumentException. */
+    public static class Params {
+        private String orderBy;
+        private Integer page;
+
+        public String getOrderBy() {
+            return orderBy;
+        }
+
+        public void setOrderBy(String orderBy) {
+            throw new IllegalArgumentException("Invalid orderBy field: " + orderBy);
+        }
+
+        public Integer getPage() {
+            return page;
+        }
+
+        public void setPage(Integer page) {
+            this.page = page;
+        }
+    }
+
+    @Test
+    void bindingErrorsExposeTheCauseMessageNotInternalClassNames() throws Exception {
+        DataBinder binder = new DataBinder(new Params(), "params");
+        binder.bind(new MutablePropertyValues(Map.of("orderBy", "password", "page", "abc")));
+        MethodParameter parameter = new MethodParameter(Object.class.getMethod("equals", Object.class), 0);
+
+        ResponseEntity<ErrorDTO> response = handler.handleValidation(
+                new MethodArgumentNotValidException(parameter, binder.getBindingResult()));
+
+        Map<?, ?> fieldErrors = (Map<?, ?>) response.getBody().details().get("fieldErrors");
+        assertEquals("Invalid orderBy field: password", fieldErrors.get("orderBy"));
+        assertEquals("invalid value", fieldErrors.get("page"));
     }
 
     @Test

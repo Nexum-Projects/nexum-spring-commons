@@ -5,10 +5,18 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-26
+
 ### Added
 
 - CI con GitHub Actions: `./mvnw verify` en cada PR y en cada merge a `main`; el check `verify` es obligatorio para
   mergear.
+
+### Fixed
+
+- Los errores de binding de parámetros ya no exponen nombres de clases internas en `details.fieldErrors`: si el
+  setter rechaza el valor con `IllegalArgumentException` se devuelve su mensaje (por ejemplo `Invalid orderBy field:
+  password`); otros fallos, como un tipo incorrecto, devuelven `invalid value`.
 
 ## [1.0.0] - 2026-09-26
 

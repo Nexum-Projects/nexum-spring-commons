@@ -18,6 +18,7 @@ REST. Se distribuye por JitPack (`com.github.Nexum-Projects:nexum-spring-commons
 | `pagination` | Parámetros base (tope de `limit` en 100) y `Paging.find(...)` |
 | `search` | `SearchSpecificationUtils` (sin acentos con `unaccent`, comodines de `LIKE` escapados) |
 | `ratelimit` | `RateLimiter`, `RateLimitFilter`, `RateLimitProperties` (`nexum.commons.rate-limit.*`) |
+| `username` | `@Username`, `UsernameValidator`, `UsernamePolicy`, `UsernameProperties` (`nexum.commons.username.*`) |
 | `autoconfigure` | `CommonsAutoConfiguration`, registrada en `META-INF/spring/...AutoConfiguration.imports` |
 
 ## Comandos

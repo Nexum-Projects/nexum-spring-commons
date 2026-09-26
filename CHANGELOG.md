@@ -5,6 +5,12 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+### Added
+
+- Módulo de username (`com.nexum.commons.username`): `@Username` (Bean Validation) y `UsernamePolicy` (normaliza a
+  minúsculas sin espacios) con la regla de slug `^[a-z][a-z0-9_]{2,31}$` por defecto. Se activa, desactiva o cambia con
+  `nexum.commons.username.*` sin tocar los DTO. Bean Validation queda como dependencia opcional.
+
 ## [1.1.0] - 2026-09-26
 
 ### Added

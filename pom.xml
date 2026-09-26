@@ -16,6 +16,11 @@
 	<url>https://github.com/Nexum-Projects/nexum-spring-commons</url>
 	<properties>
 		<java.version>17</java.version>
+		<sonar.projectKey>nexum-spring-commons</sonar.projectKey>
+		<sonar.projectName>nexum-spring-commons</sonar.projectName>
+		<sonar.java.source>17</sonar.java.source>
+		<sonar.exclusions>**/target/**,graphify-out/**</sonar.exclusions>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<!--

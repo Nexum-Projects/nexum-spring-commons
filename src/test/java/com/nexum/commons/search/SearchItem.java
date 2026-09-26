@@ -25,4 +25,12 @@ public class SearchItem {
     public String getName() {
         return name;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
 }

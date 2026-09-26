@@ -179,11 +179,17 @@ Para quien contribuya:
 
 ## Desarrollo
 
-Requisitos: JDK 17 y Docker (los tests de integración usan Testcontainers con PostgreSQL).
+Para empezar a trabajar en la librería: [`INICIO.md`](INICIO.md) (estado, grafo del código y validación) y
+[`CLAUDE.md`](CLAUDE.md) (reglas del proyecto).
+
+Requisitos: JDK 17 y Docker (los tests de integración usan Testcontainers con PostgreSQL). Para el análisis
+estático, SonarQube con `SONAR_HOST_URL` y `SONAR_TOKEN` exportados; para el grafo del código, `graphify`.
 
 ```bash
 ./mvnw test      # tests unitarios (*Test), sin Docker
-./mvnw verify    # unitarios + integración (*IT) + cobertura JaCoCo
+./mvnw verify           # unitarios + integración (*IT) + cobertura JaCoCo
+./scripts/sonar-scan.sh # SonarQube y Quality Gate
+graphify update .       # grafo local del código (no se versiona)
 ```
 
 Estructura:

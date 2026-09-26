@@ -28,7 +28,8 @@ import java.util.regex.Pattern;
  */
 public class RateLimitFilter extends OncePerRequestFilter {
     private static final int MAX_BODY_BYTES = 4096;
-    // ponytail: regex sobre el body de login; suficiente para {"email": "..."}
+    // ponytail: el email se extrae con una regex sobre el cuerpo JSON del login, sin parsearlo; suficiente para
+    // un cuerpo plano con el campo email. Parsear con Jackson si el login cambia de formato.
     private static final Pattern EMAIL = Pattern.compile("\"email\"\\s*:\\s*\"([^\"]{1,255})\"");
 
     private final RateLimitProperties properties;

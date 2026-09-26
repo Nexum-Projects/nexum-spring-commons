@@ -7,6 +7,9 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Added
 
+- Documentación para desarrollo: `CLAUDE.md` (reglas del proyecto) e `INICIO.md` (arranque de sesión: estado, grafo
+  del código y validación). La bitácora de sesiones (`handoff/`) y el grafo (`graphify-out/`) quedan fuera de git.
+- Análisis con SonarQube: `scripts/sonar-scan.sh` y propiedades de Sonar en el `pom`.
 - Autoconfiguración (`CommonsAutoConfiguration`, registrada en `AutoConfiguration.imports`): en aplicaciones
   servlet registra `GlobalExceptionHandler` y `RateLimitFilter`, ambos reemplazables con
   `@ConditionalOnMissingBean`; el rate limit se desactiva por propiedad.
@@ -41,3 +44,4 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
   coincidían.
 - El rate limit toma la ruta de la URI sin el context path: con `getServletPath()` no limitaba nada si la
   aplicación cambiaba el mapeo del `DispatcherServlet` (`spring.mvc.servlet.path`).
+- `ErrorCode` extiende `Serializable`, porque viaja dentro de `BusinessException`.

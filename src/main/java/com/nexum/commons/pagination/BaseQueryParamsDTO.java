@@ -42,6 +42,6 @@ public abstract class BaseQueryParamsDTO {
     }
 
     public void setPagination(Boolean pagination) {
-        this.pagination = pagination != null ? pagination : true;
+        this.pagination = pagination == null || pagination;
     }
 }

@@ -63,7 +63,7 @@ class AutoConfigurationDiscoveryIT {
         }
 
         @Bean
-        SecurityFilterChain permitAll(HttpSecurity http) throws Exception {
+        SecurityFilterChain permitAll(HttpSecurity http) {
             return http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth.anyRequest().permitAll()).build();
         }
 
@@ -82,6 +82,7 @@ class AutoConfigurationDiscoveryIT {
 
         @PostMapping("/api/v1/auth/register")
         void register() {
+            // Sin cuerpo a propósito: el test solo cuenta respuestas para comprobar el rate limit.
         }
     }
 }

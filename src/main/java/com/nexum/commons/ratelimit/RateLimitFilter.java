@@ -1,6 +1,7 @@
 package com.nexum.commons.ratelimit;
 
 import com.nexum.commons.error.CommonErrorCode;
+import com.nexum.commons.error.ErrorResponses;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletException;
@@ -9,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.BufferedReader;
@@ -77,13 +77,8 @@ public class RateLimitFilter extends OncePerRequestFilter {
         }
 
         if (!allowed) {
-            response.setStatus(429);
             response.setHeader("Retry-After", String.valueOf(retryAfterSeconds));
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"code\":\"" + CommonErrorCode.TOO_MANY_REQUESTS.name()
-                    + "\",\"message\":\"Too many requests. Try again later.\","
-                    + "\"statusCode\":429,\"type\":\"TOO_MANY_REQUESTS\",\"details\":null}");
+            ErrorResponses.write(response, CommonErrorCode.TOO_MANY_REQUESTS, "Too many requests. Try again later.");
             return;
         }
         filterChain.doFilter(forwarded, response);

@@ -3,6 +3,8 @@ package com.nexum.commons.autoconfigure;
 import com.nexum.commons.error.GlobalExceptionHandler;
 import com.nexum.commons.ratelimit.RateLimitFilter;
 import com.nexum.commons.ratelimit.RateLimitProperties;
+import com.nexum.commons.security.RestAccessDeniedHandler;
+import com.nexum.commons.security.RestAuthenticationEntryPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -25,6 +27,37 @@ class CommonsAutoConfigurationTest {
             assertThat(properties.excludedPaths()).containsExactly("/api/v1/auth/change-password");
             assertThat(properties.authLimit()).isEqualTo(10);
         });
+    }
+
+    @Test
+    void registersTheRestSecurityHandlers() {
+        runner.run(context -> assertThat(context)
+                .hasSingleBean(RestAuthenticationEntryPoint.class)
+                .hasSingleBean(RestAccessDeniedHandler.class));
+    }
+
+    /** Un proyecto que ya tiene sus propios beans con esos nombres (de otras clases) arranca igual. */
+    @Test
+    void coexistsWithApplicationBeansThatShareTheUsualNames() {
+        runner.withBean("restAuthenticationEntryPoint", AppEntryPoint.class, AppEntryPoint::new)
+                .withBean("globalExceptionHandler", Object.class, Object::new)
+                .withBean("rateLimitFilter", Object.class, Object::new)
+                .withBean("usernamePolicy", Object.class, Object::new)
+                .run(context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(context).doesNotHaveBean(RestAuthenticationEntryPoint.class);
+                    assertThat(context).hasSingleBean(GlobalExceptionHandler.class)
+                            .hasSingleBean(RateLimitFilter.class);
+                });
+    }
+
+    static class AppEntryPoint implements org.springframework.security.web.AuthenticationEntryPoint {
+        @Override
+        public void commence(jakarta.servlet.http.HttpServletRequest request,
+                             jakarta.servlet.http.HttpServletResponse response,
+                             org.springframework.security.core.AuthenticationException ex) {
+            // Sin cuerpo a propósito: solo representa un entry point propio de la aplicación.
+        }
     }
 
     @Test

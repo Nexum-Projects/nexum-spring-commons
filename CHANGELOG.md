@@ -5,6 +5,23 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-26
+
+### Added
+
+- `ErrorResponses.write(...)`: escribe el `ErrorDTO` estándar desde filtros (JWT, rate limit) sin armar el JSON a mano.
+- `RestAuthenticationEntryPoint` (401) y `RestAccessDeniedHandler` (403) con el formato de error estándar; la
+  autoconfiguración los registra y la aplicación los conecta en su `SecurityFilterChain`.
+- `TokenUtils`: token aleatorio URL-safe y hash SHA-256 para tokens de un solo uso.
+
+### Changed
+
+- Los beans de la autoconfiguración llevan el prefijo `nexumCommons` (`nexumCommonsGlobalExceptionHandler`,
+  `nexumCommonsRateLimitFilter`, …): una aplicación que conserva sus propios beans con los nombres habituales ya no
+  falla al arrancar por nombres duplicados.
+- `@Username` valida la forma normalizada del valor (recortada y en minúsculas si la regla está activa): `Maria_Lopez`
+  se acepta y el service guarda `maria_lopez`. Antes se rechazaba por las mayúsculas.
+
 ## [1.2.0] - 2026-09-26
 
 ### Added

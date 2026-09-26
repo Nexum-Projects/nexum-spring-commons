@@ -7,6 +7,8 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Added
 
+- Módulo de búsqueda (`com.nexum.commons.search`): `SearchSpecificationUtils.activeAndTextQuery(...)` filtra por
+  estado y busca texto en varios campos sin distinguir mayúsculas ni acentos (`unaccent` de PostgreSQL).
 - Módulo de paginación (`com.nexum.commons.pagination`): `BaseQueryParamsDTO` (con tope de `limit` en 100),
   `BaseSortableQueryParamsDTO`, `BaseSearchableQueryParamsDTO` y `Paging.find(...)`, que arma un `PageDTO` o un
   `ListDTO` en una línea. Probado contra PostgreSQL con Testcontainers.
@@ -25,3 +27,8 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
   publicación de las fuentes, cobertura con JaCoCo, tests de integración con Testcontainers y configuración de
   JitPack (`jitpack.yml`).
 - Documentación inicial: `README.md` con el propósito, el alcance, la instalación y el uso previsto.
+
+### Fixed
+
+- La búsqueda de texto escapa los comodines de `LIKE`: antes, una búsqueda con `_` o `%` devolvía filas que no
+  coincidían.

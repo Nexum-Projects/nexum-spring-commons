@@ -26,7 +26,7 @@ usan responden igual.
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
-Estado: **errores**, **respuestas** y **paginación** implementados; el resto, en desarrollo.
+Estado: **errores**, **respuestas**, **paginación** y **búsqueda** implementados; el resto, en desarrollo.
 
 ## Qué no incluye
 
@@ -110,6 +110,15 @@ relaciones que use el DTO se cargan con `@EntityGraph` para no caer en N+1:
 public DataResponse<ProductResponseDTO> findMany(ProductQueryParamsDTO params) {
     return Paging.find(params, repository, ProductSpecifications.byParams(params), mapper::toResponse);
 }
+```
+
+**Búsqueda de texto sin acentos.** Requiere la extensión `unaccent` de PostgreSQL (habilitarla en una migración:
+`CREATE EXTENSION IF NOT EXISTS unaccent;`). El texto del usuario se trata como literal: `%` y `_` no actúan como
+comodines.
+
+```java
+Specification<Product> spec = SearchSpecificationUtils.activeAndTextQuery(
+        "isActive", true, params.getQuery(), params.getSearchableFields());
 ```
 
 **Configuración del rate limit:**

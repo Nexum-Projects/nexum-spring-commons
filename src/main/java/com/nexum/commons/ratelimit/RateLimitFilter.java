@@ -46,7 +46,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
+        String path = path(request);
         return !HttpMethod.POST.matches(request.getMethod())
                 || !path.startsWith(properties.pathPrefix())
                 || properties.excludedPaths().contains(path);
@@ -59,7 +59,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
         long now = System.currentTimeMillis();
-        String path = request.getServletPath();
+        String path = path(request);
         HttpServletRequest forwarded = request;
         boolean allowed = ipLimiter.allow(request.getRemoteAddr() + " " + path, now);
 
@@ -86,6 +86,11 @@ public class RateLimitFilter extends OncePerRequestFilter {
             return;
         }
         filterChain.doFilter(forwarded, response);
+    }
+
+    /** Ruta sin el context path; no depende del mapeo del DispatcherServlet ({@code spring.mvc.servlet.path}). */
+    private static String path(HttpServletRequest request) {
+        return request.getRequestURI().substring(request.getContextPath().length());
     }
 
     private static final class CachedBodyRequest extends HttpServletRequestWrapper {

@@ -26,7 +26,7 @@ usan responden igual.
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
-Estado: **errores**, **respuestas**, **paginación**, **búsqueda** y **rate limit** implementados; la autoconfiguración, en desarrollo.
+Estado: todos los módulos implementados y probados; pendiente la primera versión publicada.
 
 ## Qué no incluye
 
@@ -137,9 +137,13 @@ nexum.commons.rate-limit.window-seconds=60
 El contador vive en memoria: se pierde al reiniciar y no se comparte entre instancias. Detrás de un proxy, usar
 `server.forward-headers-strategy=native` para que la IP sea la del cliente.
 
-**Reemplazar un bean de la librería.** Si la aplicación define su propio `GlobalExceptionHandler`, el de la
-librería no se registra. Un `@RestControllerAdvice` propio con mayor prioridad también gana sobre el de la
-librería.
+**Qué se registra solo.** En una aplicación servlet, la autoconfiguración añade `GlobalExceptionHandler` y
+`RateLimitFilter`; no hace falta `@Import` ni `@ComponentScan`.
+
+**Reemplazar o desactivar.** Si la aplicación declara su propio bean de tipo `GlobalExceptionHandler` (por ejemplo
+una subclase que añade handlers), el de la librería no se registra. Un `@RestControllerAdvice` propio con mayor
+prioridad también gana, porque el de la librería tiene la prioridad mínima. El rate limit se apaga con
+`nexum.commons.rate-limit.enabled=false`.
 
 ## Principios de diseño
 

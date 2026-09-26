@@ -64,6 +64,18 @@ class RateLimitFilterTest {
     }
 
     @Test
+    void usesThePathWithoutContextPathRegardlessOfServletMapping() throws Exception {
+        RateLimitFilter strict = new RateLimitFilter(new RateLimitProperties(
+                true, "/api/v1/auth/", List.of(), LOGIN, 0, 0, 60));
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/app/api/v1/auth/register");
+        request.setContextPath("/app");
+        request.setServletPath("/api");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        strict.doFilter(request, response, new MockFilterChain());
+        assertEquals(429, response.getStatus());
+    }
+
+    @Test
     void loginBodyStillReachesTheControllerAfterBeingRead() throws Exception {
         MockFilterChain chain = new MockFilterChain();
         filter.doFilter(request(LOGIN, "10.3.3.3", "{\"email\":\"a@b.com\"}"), new MockHttpServletResponse(), chain);

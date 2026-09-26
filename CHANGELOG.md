@@ -7,6 +7,9 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Added
 
+- Autoconfiguración (`CommonsAutoConfiguration`, registrada en `AutoConfiguration.imports`): en aplicaciones
+  servlet registra `GlobalExceptionHandler` y `RateLimitFilter`, ambos reemplazables con
+  `@ConditionalOnMissingBean`; el rate limit se desactiva por propiedad.
 - Módulo de rate limit (`com.nexum.commons.ratelimit`): `RateLimiter` (ventana fija en memoria), `RateLimitFilter`
   (por IP y ruta, y el login además por email) y `RateLimitProperties` (`nexum.commons.rate-limit.*`), con el
   prefijo protegido, las rutas excluidas y los límites configurables.
@@ -35,3 +38,5 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 - La búsqueda de texto escapa los comodines de `LIKE`: antes, una búsqueda con `_` o `%` devolvía filas que no
   coincidían.
+- El rate limit toma la ruta de la URI sin el context path: con `getServletPath()` no limitaba nada si la
+  aplicación cambiaba el mapeo del `DispatcherServlet` (`spring.mvc.servlet.path`).

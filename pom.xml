@@ -14,6 +14,12 @@
 	<name>nexum-spring-commons</name>
 	<description>Respuestas, paginación, manejo de errores, rate limit y búsqueda para APIs Spring Boot</description>
 	<url>https://github.com/Nexum-Projects/nexum-spring-commons</url>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
 	<properties>
 		<java.version>17</java.version>
 		<sonar.projectKey>nexum-spring-commons</sonar.projectKey>

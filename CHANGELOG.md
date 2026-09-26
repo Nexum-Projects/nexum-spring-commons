@@ -7,6 +7,7 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Added
 
+- Licencia MIT.
 - Flujo de contribución: `CONTRIBUTING.md`, plantilla de PR, hooks de git en `.githooks/` (bloquean commit y push
   sobre `main`, `master`, `develop` y `release/*`) y skills de Claude Code del proyecto en `.claude/skills/`
   (`inicio-nexum-commons`, `nexum-commons-checks`, `nexum-commons-pr` con el estándar de PR, y

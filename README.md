@@ -211,4 +211,4 @@ construye la librería la primera vez que se pide ese tag.
 
 ## Licencia
 
-Pendiente de definir antes de la primera versión publicada.
+[MIT](LICENSE).

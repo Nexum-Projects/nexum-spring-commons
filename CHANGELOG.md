@@ -7,6 +7,9 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Added
 
+- Módulo de respuestas (`com.nexum.commons.response`): `PageDetailDTO`, `PageDTO`, `ListDTO`, `PageMetaDTO` y la
+  interfaz `DataResponse`, como `record`. El JSON (`data`, `meta` y sus campos) está cubierto por un test de
+  contrato.
 - Módulo de errores (`com.nexum.commons.error`):
   - `ErrorCode`: interfaz que cada aplicación implementa con su propio enum; `name()` es el código que ve el
     cliente y `httpStatus()` el estado de la respuesta.

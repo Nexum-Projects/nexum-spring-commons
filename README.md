@@ -26,7 +26,7 @@ usan responden igual.
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
-Estado: **errores** implementado; el resto, en desarrollo.
+Estado: **errores** y **respuestas** implementados; el resto, en desarrollo.
 
 ## Qué no incluye
 

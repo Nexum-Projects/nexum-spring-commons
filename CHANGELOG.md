@@ -7,6 +7,9 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Added
 
+- Módulo de paginación (`com.nexum.commons.pagination`): `BaseQueryParamsDTO` (con tope de `limit` en 100),
+  `BaseSortableQueryParamsDTO`, `BaseSearchableQueryParamsDTO` y `Paging.find(...)`, que arma un `PageDTO` o un
+  `ListDTO` en una línea. Probado contra PostgreSQL con Testcontainers.
 - Módulo de respuestas (`com.nexum.commons.response`): `PageDetailDTO`, `PageDTO`, `ListDTO`, `PageMetaDTO` y la
   interfaz `DataResponse`, como `record`. El JSON (`data`, `meta` y sus campos) está cubierto por un test de
   contrato.

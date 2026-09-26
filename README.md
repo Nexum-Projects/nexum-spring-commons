@@ -26,7 +26,7 @@ usan responden igual.
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
-Estado: **errores** y **respuestas** implementados; el resto, en desarrollo.
+Estado: **errores**, **respuestas** y **paginación** implementados; el resto, en desarrollo.
 
 ## Qué no incluye
 
@@ -90,8 +90,20 @@ Respuesta: `409` con el cuerpo
   "statusCode": 409, "type": "CONFLICT", "details": null }
 ```
 
-**Un listado paginado.** El `mapper` se ejecuta dentro de la transacción del service, por eso el método es
-`@Transactional(readOnly = true)`:
+**Un listado paginado.** Los parámetros de consulta extienden `BaseSortableQueryParamsDTO` (o
+`BaseSearchableQueryParamsDTO` si hay búsqueda de texto) y declaran qué campos se pueden ordenar:
+
+```java
+public class ProductQueryParamsDTO extends BaseSearchableQueryParamsDTO {
+    @Override protected String defaultOrderBy() { return "createdAt"; }
+    @Override protected Set<String> allowedOrderByFields() { return Set.of("name", "createdAt"); }
+    @Override protected Set<String> searchableFields() { return Set.of("name"); }
+}
+```
+
+Valores por defecto: `page=1`, `limit=10` (máximo 100), `order=ASC`, `pagination=true`. Un `orderBy` fuera de la
+lista responde 400. El `mapper` recibe entidades, así que el service es `@Transactional(readOnly = true)`; las
+relaciones que use el DTO se cargan con `@EntityGraph` para no caer en N+1:
 
 ```java
 @Transactional(readOnly = true)

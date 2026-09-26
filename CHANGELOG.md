@@ -5,6 +5,11 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+### Added
+
+- CI con GitHub Actions: `./mvnw verify` en cada PR y en cada merge a `main`; el check `verify` es obligatorio para
+  mergear.
+
 ## [1.0.0] - 2026-09-26
 
 ### Added

@@ -2,7 +2,7 @@
 
 Librería para APIs REST con Spring Boot: respuestas, paginación, manejo de errores, rate limit y búsqueda.
 
-> **Versión actual:** `v1.1.0`. Cambios en [`CHANGELOG.md`](CHANGELOG.md).
+> **Versión actual:** `v1.2.0`. Cambios en [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Por qué existe
 
@@ -23,6 +23,7 @@ usan responden igual.
 | Paginación | `com.nexum.commons.pagination` | Parámetros de consulta (`page`, `limit`, `order`, `orderBy`, `query`, `pagination`) con un tope de `limit`, y `Paging.find(...)` para armar un listado en una línea |
 | Búsqueda | `com.nexum.commons.search` | Especificaciones de Spring Data JPA para filtrar por estado y buscar texto sin distinguir acentos |
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
+| Username | `com.nexum.commons.username` | Regla de nombre de usuario tipo slug: anotación `@Username` y `UsernamePolicy`, activable y configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
 Todos los módulos están implementados y probados.
@@ -36,7 +37,7 @@ datos. Esas piezas dependen de cada aplicación.
 
 - Java 17 o superior.
 - Spring Boot 4.0.x (se compila contra 4.0.6).
-- La aplicación debe tener Spring Web MVC, Spring Data JPA y Spring Security. La librería los usa, pero no los
+- La aplicación debe tener Spring Web MVC, Spring Data JPA y Spring Security (y Bean Validation para `@Username`). La librería los usa, pero no los
   arrastra como dependencias: la aplicación aporta las versiones que le corresponden.
 
 ## Instalación
@@ -55,7 +56,7 @@ Se distribuye por [JitPack](https://jitpack.io). En el `pom.xml` de la aplicaci�
   <dependency>
     <groupId>com.github.Nexum-Projects</groupId>
     <artifactId>nexum-spring-commons</artifactId>
-    <version>v1.1.0</version>
+    <version>v1.2.0</version>
   </dependency>
 </dependencies>
 ```
@@ -116,6 +117,25 @@ comodines.
 Specification<Product> spec = SearchSpecificationUtils.activeAndTextQuery(
         "isActive", true, params.getQuery(), params.getSearchableFields());
 ```
+
+**Username tipo slug.** `@Username` valida el campo según las propiedades; `UsernamePolicy` normaliza el valor antes
+de guardarlo. Por defecto: 3 a 32 caracteres, empieza con letra minúscula y sigue con minúsculas, dígitos o `_`
+(`maria_hernandez23` sí; `Maria Lopez`, `maría`, `maria-hernandez` no).
+
+```java
+public record RegisterRequestDTO(@NotBlank @Username String name, ...) {}
+
+user.setName(usernamePolicy.normalize(request.name()));   // trim + minúsculas
+```
+
+```properties
+nexum.commons.username.enabled=true                    # false: acepta cualquier valor y normalize solo recorta
+nexum.commons.username.pattern=^[a-z][a-z0-9_]{2,31}$
+nexum.commons.username.message=Username must be 3-32 characters: start with a letter, then lowercase letters, digits or underscore
+```
+
+`null` es válido para `@Username`: combinarlo con `@NotBlank` si el campo es obligatorio. Si un frontend valida la
+misma regla, cambiarla allí también al desactivarla o modificarla.
 
 **Rate limit.** Limita los `POST` bajo un prefijo por IP y ruta, y el login además por el email del cuerpo. Al
 superar el límite responde `429` con `Retry-After` y el formato de error estándar. Valores por defecto:

@@ -145,6 +145,26 @@ una subclase que añade handlers), el de la librería no se registra. Un `@RestC
 prioridad también gana, porque el de la librería tiene la prioridad mínima. El rate limit se apaga con
 `nexum.commons.rate-limit.enabled=false`.
 
+## Migrar un proyecto existente
+
+Para un proyecto que ya tiene su propia copia de estas clases:
+
+1. Añadir la dependencia (ver Instalación).
+2. Borrar las copias locales: envolturas de respuesta, parámetros de paginación, excepciones, `ErrorDTO`, el enum
+   `ErrorCode`, `GlobalExceptionHandler`, la utilidad de búsqueda y el rate limit.
+3. Cambiar los imports a `com.nexum.commons.*`.
+4. Los códigos de error genéricos pasan a `CommonErrorCode`. Los que son propios de un módulo (por ejemplo
+   `BAD_REQUEST_INVALID_CREDENTIALS` o `CONFLICT_EMAIL_ALREADY_EXISTS` en autenticación) van en un enum del módulo
+   que implemente `ErrorCode`, con el mismo nombre para que el cliente reciba el mismo código.
+5. Las envolturas son `record`: `getData()`, `getMeta()` y `getTotalPages()` pasan a `data()`, `meta()` y
+   `totalPages()`. El JSON no cambia.
+6. Las propiedades del rate limit pasan a `nexum.commons.rate-limit.*`.
+7. Opcional: reemplazar cada `findMany` por `Paging.find(...)`.
+
+Antes de desplegar, comparar las respuestas de la versión anterior y la migrada con las mismas peticiones (errores,
+listados paginados y sin paginar, `limit` grande, 401, 404 y 429). Si el proyecto tenía un `GlobalExceptionHandler`
+con handlers propios, conservarlos en una subclase del de la librería.
+
 ## Principios de diseño
 
 Para quien contribuya:

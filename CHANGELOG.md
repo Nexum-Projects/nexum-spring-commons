@@ -19,8 +19,9 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
   `BaseSortableQueryParamsDTO`, `BaseSearchableQueryParamsDTO` y `Paging.find(...)`, que arma un `PageDTO` o un
   `ListDTO` en una línea. Probado contra PostgreSQL con Testcontainers.
 - Módulo de respuestas (`com.nexum.commons.response`): `PageDetailDTO`, `PageDTO`, `ListDTO`, `PageMetaDTO` y la
-  interfaz `DataResponse`, como `record`. El JSON (`data`, `meta` y sus campos) está cubierto por un test de
-  contrato.
+  interfaz `DataResponse`, como `record`. Los nombres y valores del JSON (`data`, `meta` y sus campos) están
+  cubiertos por un test de contrato; el orden de las claves dentro de `meta` puede diferir de implementaciones
+  anteriores, lo que no afecta a un cliente JSON.
 - Módulo de errores (`com.nexum.commons.error`):
   - `ErrorCode`: interfaz que cada aplicación implementa con su propio enum; `name()` es el código que ve el
     cliente y `httpStatus()` el estado de la respuesta.

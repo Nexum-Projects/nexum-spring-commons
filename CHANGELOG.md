@@ -5,6 +5,8 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-26
+
 ### Added
 
 - Licencia MIT.

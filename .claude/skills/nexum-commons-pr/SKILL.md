@@ -101,7 +101,7 @@ Si el cambio corrige un defecto, indicar qué test falla sin la corrección (se 
 
 Obligatoria si cambia la API pública, una propiedad `nexum.commons.*` o el JSON. Procedimiento:
 
-1. `./mvnw install -DskipTests` en la librería (versión `-SNAPSHOT` en `~/.m2`).
+1. `./mvnw install -DskipTests` en la librería (instala la versión del `pom` en `~/.m2`).
 2. En un proyecto consumidor, usar esa versión y ejecutar su `./mvnw verify`.
 3. Levantar el consumidor con la versión anterior y con la nueva, lanzar las mismas peticiones y comparar status y
    cuerpo (errores, listado paginado y sin paginar, `limit` grande, 401, 404, 429).
@@ -110,7 +110,7 @@ Obligatoria si cambia la API pública, una propiedad `nexum.commons.*` o el JSON
 <details>
 <summary>Evidencia en proyecto consumidor — respuestas antes y después (expandir)</summary>
 
-**Librería probada:** `0.1.0-SNAPSHOT` (commit `abc1234`)
+**Librería probada:** `X.Y.Z` instalada en local (commit `abc1234`)
 
 ## Qué se ejecutó
 Descripción en prosa: qué proyecto (genérico), qué se migró, qué peticiones se compararon.

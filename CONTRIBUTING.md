@@ -58,7 +58,9 @@ No hay entorno de desarrollo desplegado: la evidencia es local (`./mvnw verify` 
 Testcontainers) y, si cambia la API pública o el JSON, una prueba en un proyecto consumidor comparando sus
 respuestas antes y después. Un PR no se revisa hasta que:
 
-1. `./mvnw verify` está en verde.
+1. `./mvnw verify` está en verde en local y el check `verify` del CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+   pasa en el PR. GitHub no permite mergear sin ese check. En el primer PR de alguien de fuera, quien mantiene el
+   repositorio aprueba la ejecución del CI.
 2. Si cambia la API pública, una propiedad o el JSON, está la prueba en un proyecto consumidor.
 3. SonarQube pasa el Quality Gate y sus valores están en las tablas (New Code y Overall Code). Si no se pudo
    ejecutar, se indica como pendiente; nunca se rellenan valores.

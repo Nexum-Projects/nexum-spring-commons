@@ -10,7 +10,7 @@
 - [ ] Cambio incompatible: versión mayor, explicado abajo y en el CHANGELOG
 
 ## Test plan
-- [ ] `./mvnw verify` en verde (unitarios + `*IT` con Testcontainers)
+- [ ] `./mvnw verify` en verde (unitarios + `*IT` con Testcontainers) y check `verify` del CI en verde
 - [ ] Tests nuevos o actualizados para el cambio
 - [ ] Probado en un proyecto consumidor con `./mvnw install` (obligatorio si cambia la API pública o el JSON)
 

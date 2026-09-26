@@ -2,6 +2,7 @@ package com.nexum.commons.error;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.MethodInvocationException;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -41,7 +42,7 @@ public class GlobalExceptionHandler {
         Map<String, String> fieldErrors = ex.getBindingResult().getFieldErrors().stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        error -> Objects.requireNonNullElse(error.getDefaultMessage(), "invalid"),
+                        GlobalExceptionHandler::fieldMessage,
                         (first, second) -> first));
         return build(CommonErrorCode.BAD_REQUEST_VALIDATION_ERROR, "Request validation failed",
                 Map.of("fieldErrors", fieldErrors));
@@ -82,6 +83,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDTO> handleGeneric(Exception ex) {
         log.error("Unhandled exception", ex);
         return build(CommonErrorCode.INTERNAL_SERVER_ERROR, "An unexpected error occurred", null);
+    }
+
+    /**
+     * Mensaje por campo sin detalles internos. Si el setter rechazó el valor con IllegalArgumentException (validación
+     * de los parámetros de consulta), se usa su mensaje; otros fallos de binding (tipo incorrecto) dan un genérico.
+     */
+    private static String fieldMessage(FieldError error) {
+        if (!error.isBindingFailure()) {
+            return Objects.requireNonNullElse(error.getDefaultMessage(), "invalid");
+        }
+        if (error.contains(MethodInvocationException.class)
+                && error.unwrap(MethodInvocationException.class).getCause() instanceof IllegalArgumentException cause
+                && cause.getMessage() != null) {
+            return cause.getMessage();
+        }
+        return "invalid value";
     }
 
     private static ResponseEntity<ErrorDTO> build(ErrorCode code, String message, Map<String, Object> details) {

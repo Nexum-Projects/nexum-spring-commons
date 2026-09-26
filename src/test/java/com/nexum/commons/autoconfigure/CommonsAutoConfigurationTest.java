@@ -56,6 +56,7 @@ class CommonsAutoConfigurationTest {
         public void commence(jakarta.servlet.http.HttpServletRequest request,
                              jakarta.servlet.http.HttpServletResponse response,
                              org.springframework.security.core.AuthenticationException ex) {
+            // Sin cuerpo a propósito: solo representa un entry point propio de la aplicación.
         }
     }
 

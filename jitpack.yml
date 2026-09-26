@@ -1,0 +1,5 @@
+# Construcción en JitPack (https://jitpack.io): se dispara al pedir un tag, por ejemplo v1.0.0
+jdk:
+  - openjdk17
+install:
+  - ./mvnw -B -DskipTests -Dmaven.javadoc.skip=true clean install

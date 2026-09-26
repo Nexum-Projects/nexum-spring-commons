@@ -36,6 +36,29 @@ class CommonsAutoConfigurationTest {
                 .hasSingleBean(RestAccessDeniedHandler.class));
     }
 
+    /** Un proyecto que ya tiene sus propios beans con esos nombres (de otras clases) arranca igual. */
+    @Test
+    void coexistsWithApplicationBeansThatShareTheUsualNames() {
+        runner.withBean("restAuthenticationEntryPoint", AppEntryPoint.class, AppEntryPoint::new)
+                .withBean("globalExceptionHandler", Object.class, Object::new)
+                .withBean("rateLimitFilter", Object.class, Object::new)
+                .withBean("usernamePolicy", Object.class, Object::new)
+                .run(context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(context).doesNotHaveBean(RestAuthenticationEntryPoint.class);
+                    assertThat(context).hasSingleBean(GlobalExceptionHandler.class)
+                            .hasSingleBean(RateLimitFilter.class);
+                });
+    }
+
+    static class AppEntryPoint implements org.springframework.security.web.AuthenticationEntryPoint {
+        @Override
+        public void commence(jakarta.servlet.http.HttpServletRequest request,
+                             jakarta.servlet.http.HttpServletResponse response,
+                             org.springframework.security.core.AuthenticationException ex) {
+        }
+    }
+
     @Test
     void bindsPropertiesFromTheEnvironment() {
         runner.withPropertyValues(

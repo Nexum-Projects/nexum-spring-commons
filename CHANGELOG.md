@@ -14,6 +14,9 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Changed
 
+- Los beans de la autoconfiguración llevan el prefijo `nexumCommons` (`nexumCommonsGlobalExceptionHandler`,
+  `nexumCommonsRateLimitFilter`, …): una aplicación que conserva sus propios beans con los nombres habituales ya no
+  falla al arrancar por nombres duplicados.
 - `@Username` valida la forma normalizada del valor (recortada y en minúsculas si la regla está activa): `Maria_Lopez`
   se acepta y el service guarda `maria_lopez`. Antes se rechazaba por las mayúsculas.
 

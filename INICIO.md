@@ -3,7 +3,8 @@
 **Versión:** `v1.0`
 **Fecha:** 2026-09-26
 
-Pasos para retomar el trabajo en la librería, en una sesión nueva o después de un tiempo. Las reglas del
+Pasos para retomar el trabajo en la librería, en una sesión nueva o después de un tiempo. En Claude Code, la skill
+`/inicio-nexum-commons` los ejecuta. Las reglas del
 proyecto están en [`CLAUDE.md`](CLAUDE.md); el uso para quien consume la librería, en [`README.md`](README.md).
 
 ## 1. Estado
@@ -14,14 +15,15 @@ git branch --show-current
 git log --oneline -10
 ```
 
-`main` no recibe commits directos: se trabaja en una rama propia y se integra con un PR.
+`main` no recibe commits directos: se trabaja en una rama propia y se integra con un PR. Comprobar que los hooks
+están activos (`git config core.hooksPath` debe devolver `.githooks`); ver [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## 2. Bitácora local (handoff)
 
 Si existe `handoff/`, leer el archivo más reciente (`handoff/handoff_AAAA-MM-DD-HHMM.md`) y verificar lo que dice
 contra el código y git antes de continuar. La carpeta está en `.gitignore`: es la bitácora personal de desarrollo
-y no se sube. Al cerrar una sesión, dejar un handoff nuevo con: objetivo, estado, decisiones vigentes, validación
-ejecutada, bloqueos, pendientes y estado de git.
+y no se sube. Al cerrar una sesión, dejar un handoff nuevo con la skill `/nexum-commons-handoff` (formato fijo:
+objetivo, estado, decisiones vigentes, validación, bloqueos, failed attempts, pendientes y estado de git).
 
 ## 3. Grafo del código (graphify)
 
@@ -41,6 +43,8 @@ código: `graphify update .`.
 | Tests unitarios, integración y cobertura | `./mvnw verify` | Docker (Testcontainers) |
 | SonarQube y Quality Gate | `./scripts/sonar-scan.sh` | `SONAR_HOST_URL` y `SONAR_TOKEN` exportados en el entorno |
 | Grafo | `graphify update .` | graphify instalado |
+
+En Claude Code, la skill `/nexum-commons-checks` ejecuta estos pasos y reporta el resultado.
 
 - El token de Sonar se exporta en la sesión (`export SONAR_TOKEN=...`) y nunca se guarda en el repositorio.
   Antes de reportar Sonar como bloqueado, comprobar el token con

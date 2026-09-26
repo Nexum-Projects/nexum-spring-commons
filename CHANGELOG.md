@@ -7,6 +7,10 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Added
 
+- Flujo de contribución: `CONTRIBUTING.md`, plantilla de PR, hooks de git en `.githooks/` (bloquean commit y push
+  sobre `main`, `master`, `develop` y `release/*`) y skills de Claude Code del proyecto en `.claude/skills/`
+  (`inicio-nexum-commons`, `nexum-commons-checks`, `nexum-commons-pr` con el estándar de PR, y
+  `nexum-commons-handoff` con el formato de la bitácora de sesiones).
 - Documentación para desarrollo: `CLAUDE.md` (reglas del proyecto) e `INICIO.md` (arranque de sesión: estado, grafo
   del código y validación). La bitácora de sesiones (`handoff/`) y el grafo (`graphify-out/`) quedan fuera de git.
 - Análisis con SonarQube: `scripts/sonar-scan.sh` y propiedades de Sonar en el `pom`.

@@ -1,6 +1,9 @@
 # CLAUDE.md
 
-Guía para Claude Code (y cualquier agente) en este repositorio. Al empezar una sesión: [`INICIO.md`](INICIO.md).
+Guía para Claude Code (y cualquier agente) en este repositorio. Al empezar una sesión: skill
+`/inicio-nexum-commons` (o [`INICIO.md`](INICIO.md)). Antes de dar un cambio por terminado: `/nexum-commons-checks`.
+Descripción de un PR: `/nexum-commons-pr`. Cierre de sesión: `/nexum-commons-handoff`.
+Ramas, hooks, commits y estándar de PR: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Qué es
 
@@ -40,7 +43,8 @@ graphify update .           # actualizar el grafo local (graphify-out/, no versi
 - **Tests:** cada clase nueva con su test; primero el test que falla. Lo que toca base de datos va en un `*IT`
   contra PostgreSQL real, no H2.
 - **Cambio mínimo:** sin abstracciones de un solo uso ni configuración que no varía.
-- **Git:** rama propia; nunca commit ni push en `main`. Sin `git add -A` ni `git add .`. Sin commit ni push sin
+- **Git:** rama propia; nunca commit ni push en `main` (lo bloquean los hooks de `.githooks/`, activos con
+  `git config core.hooksPath .githooks`). Sin `git add -A` ni `git add .`. Sin commit ni push sin
   confirmación explícita.
 - **Documentación:** en español, con `CHANGELOG.md` actualizado en el mismo cambio. No mencionar los proyectos
   que originaron la librería.

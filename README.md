@@ -179,8 +179,8 @@ Para quien contribuya:
 
 ## Desarrollo
 
-Para empezar a trabajar en la librería: [`INICIO.md`](INICIO.md) (estado, grafo del código y validación) y
-[`CLAUDE.md`](CLAUDE.md) (reglas del proyecto).
+Para contribuir: [`CONTRIBUTING.md`](CONTRIBUTING.md) (ramas, hooks, commits, estándar de PR y skills de Claude Code).
+Para retomar el trabajo: [`INICIO.md`](INICIO.md). Reglas del proyecto: [`CLAUDE.md`](CLAUDE.md).
 
 Requisitos: JDK 17 y Docker (los tests de integración usan Testcontainers con PostgreSQL). Para el análisis
 estático, SonarQube con `SONAR_HOST_URL` y `SONAR_TOKEN` exportados; para el grafo del código, `graphify`.

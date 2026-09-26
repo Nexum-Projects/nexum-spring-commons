@@ -19,14 +19,14 @@ usan responden igual.
 
 | Módulo | Paquete | Contenido |
 |---|---|---|
-| Errores | `com.nexum.commons.error` | `ErrorCode`, `BusinessException`, `NotFoundException`, `ErrorDTO` y un `GlobalExceptionHandler` que devuelve siempre el mismo formato de error |
+| Errores | `com.nexum.commons.error` | `ErrorCode`, `CommonErrorCode`, `BusinessException`, `NotFoundException`, `ErrorDTO` y un `GlobalExceptionHandler` que devuelve siempre el mismo formato de error |
 | Respuestas | `com.nexum.commons.response` | `PageDetailDTO` (un recurso), `PageDTO` (lista paginada), `ListDTO` (lista sin paginar) y `PageMetaDTO` |
 | Paginación | `com.nexum.commons.pagination` | Parámetros de consulta (`page`, `limit`, `order`, `orderBy`, `query`, `pagination`) con un tope de `limit`, y `Paging.find(...)` para armar un listado en una línea |
 | Búsqueda | `com.nexum.commons.search` | Especificaciones de Spring Data JPA para filtrar por estado y buscar texto sin distinguir acentos |
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
-Todos los módulos están **en desarrollo**.
+Estado: todos los módulos implementados y probados; pendiente la primera versión publicada.
 
 ## Qué no incluye
 
@@ -66,8 +66,8 @@ de la aplicación:
 
 > Ejemplos del diseño. Se confirman con cada módulo terminado.
 
-**Códigos de error propios de cada aplicación.** El estado HTTP viaja con el código, así que no hace falta
-modificar el manejador de errores:
+**Códigos de error propios de cada aplicación.** El nombre del enum es el código que recibe el cliente y el estado
+HTTP viaja con el código, así que no hace falta modificar el manejador de errores:
 
 ```java
 public enum PurchaseErrorCode implements ErrorCode {
@@ -77,7 +77,6 @@ public enum PurchaseErrorCode implements ErrorCode {
 
     PurchaseErrorCode(HttpStatus status) { this.status = status; }
 
-    @Override public String code() { return name(); }
     @Override public HttpStatus httpStatus() { return status; }
 }
 
@@ -91,8 +90,20 @@ Respuesta: `409` con el cuerpo
   "statusCode": 409, "type": "CONFLICT", "details": null }
 ```
 
-**Un listado paginado.** El `mapper` se ejecuta dentro de la transacción del service, por eso el método es
-`@Transactional(readOnly = true)`:
+**Un listado paginado.** Los parámetros de consulta extienden `BaseSortableQueryParamsDTO` (o
+`BaseSearchableQueryParamsDTO` si hay búsqueda de texto) y declaran qué campos se pueden ordenar:
+
+```java
+public class ProductQueryParamsDTO extends BaseSearchableQueryParamsDTO {
+    @Override protected String defaultOrderBy() { return "createdAt"; }
+    @Override protected Set<String> allowedOrderByFields() { return Set.of("name", "createdAt"); }
+    @Override protected Set<String> searchableFields() { return Set.of("name"); }
+}
+```
+
+Valores por defecto: `page=1`, `limit=10` (máximo 100), `order=ASC`, `pagination=true`. Un `orderBy` fuera de la
+lista responde 400. El `mapper` recibe entidades, así que el service es `@Transactional(readOnly = true)`; las
+relaciones que use el DTO se cargan con `@EntityGraph` para no caer en N+1:
 
 ```java
 @Transactional(readOnly = true)
@@ -101,19 +112,58 @@ public DataResponse<ProductResponseDTO> findMany(ProductQueryParamsDTO params) {
 }
 ```
 
-**Configuración del rate limit:**
+**Búsqueda de texto sin acentos.** Requiere la extensión `unaccent` de PostgreSQL (habilitarla en una migración:
+`CREATE EXTENSION IF NOT EXISTS unaccent;`). El texto del usuario se trata como literal: `%` y `_` no actúan como
+comodines.
+
+```java
+Specification<Product> spec = SearchSpecificationUtils.activeAndTextQuery(
+        "isActive", true, params.getQuery(), params.getSearchableFields());
+```
+
+**Rate limit.** Limita los `POST` bajo un prefijo por IP y ruta, y el login además por el email del cuerpo. Al
+superar el límite responde `429` con `Retry-After` y el formato de error estándar. Valores por defecto:
 
 ```properties
 nexum.commons.rate-limit.enabled=true
-nexum.commons.rate-limit.paths=/api/v1/auth/
+nexum.commons.rate-limit.path-prefix=/api/v1/auth/
+nexum.commons.rate-limit.excluded-paths=/api/v1/auth/change-password
+nexum.commons.rate-limit.login-path=/api/v1/auth/login
 nexum.commons.rate-limit.auth-limit=10
 nexum.commons.rate-limit.login-email-limit=5
 nexum.commons.rate-limit.window-seconds=60
 ```
 
-**Reemplazar un bean de la librería.** Si la aplicación define su propio `GlobalExceptionHandler`, el de la
-librería no se registra. Un `@RestControllerAdvice` propio con mayor prioridad también gana sobre el de la
-librería.
+El contador vive en memoria: se pierde al reiniciar y no se comparte entre instancias. Detrás de un proxy, usar
+`server.forward-headers-strategy=native` para que la IP sea la del cliente.
+
+**Qué se registra solo.** En una aplicación servlet, la autoconfiguración añade `GlobalExceptionHandler` y
+`RateLimitFilter`; no hace falta `@Import` ni `@ComponentScan`.
+
+**Reemplazar o desactivar.** Si la aplicación declara su propio bean de tipo `GlobalExceptionHandler` (por ejemplo
+una subclase que añade handlers), el de la librería no se registra. Un `@RestControllerAdvice` propio con mayor
+prioridad también gana, porque el de la librería tiene la prioridad mínima. El rate limit se apaga con
+`nexum.commons.rate-limit.enabled=false`.
+
+## Migrar un proyecto existente
+
+Para un proyecto que ya tiene su propia copia de estas clases:
+
+1. Añadir la dependencia (ver Instalación).
+2. Borrar las copias locales: envolturas de respuesta, parámetros de paginación, excepciones, `ErrorDTO`, el enum
+   `ErrorCode`, `GlobalExceptionHandler`, la utilidad de búsqueda y el rate limit.
+3. Cambiar los imports a `com.nexum.commons.*`.
+4. Los códigos de error genéricos pasan a `CommonErrorCode`. Los que son propios de un módulo (por ejemplo
+   `BAD_REQUEST_INVALID_CREDENTIALS` o `CONFLICT_EMAIL_ALREADY_EXISTS` en autenticación) van en un enum del módulo
+   que implemente `ErrorCode`, con el mismo nombre para que el cliente reciba el mismo código.
+5. Las envolturas son `record`: `getData()`, `getMeta()` y `getTotalPages()` pasan a `data()`, `meta()` y
+   `totalPages()`. El JSON no cambia.
+6. Las propiedades del rate limit pasan a `nexum.commons.rate-limit.*`.
+7. Opcional: reemplazar cada `findMany` por `Paging.find(...)`.
+
+Antes de desplegar, comparar las respuestas de la versión anterior y la migrada con las mismas peticiones (errores,
+listados paginados y sin paginar, `limit` grande, 401, 404 y 429). Si el proyecto tenía un `GlobalExceptionHandler`
+con handlers propios, conservarlos en una subclase del de la librería.
 
 ## Principios de diseño
 
@@ -129,11 +179,17 @@ Para quien contribuya:
 
 ## Desarrollo
 
-Requisitos: JDK 17 y Docker (los tests de integración usan Testcontainers con PostgreSQL).
+Para contribuir: [`CONTRIBUTING.md`](CONTRIBUTING.md) (ramas, hooks, commits, estándar de PR y skills de Claude Code).
+Para retomar el trabajo: [`INICIO.md`](INICIO.md). Reglas del proyecto: [`CLAUDE.md`](CLAUDE.md).
+
+Requisitos: JDK 17 y Docker (los tests de integración usan Testcontainers con PostgreSQL). Para el análisis
+estático, SonarQube con `SONAR_HOST_URL` y `SONAR_TOKEN` exportados; para el grafo del código, `graphify`.
 
 ```bash
 ./mvnw test      # tests unitarios (*Test), sin Docker
-./mvnw verify    # unitarios + integración (*IT) + cobertura JaCoCo
+./mvnw verify           # unitarios + integración (*IT) + cobertura JaCoCo
+./scripts/sonar-scan.sh # SonarQube y Quality Gate
+graphify update .       # grafo local del código (no se versiona)
 ```
 
 Estructura:
@@ -155,4 +211,4 @@ construye la librería la primera vez que se pide ese tag.
 
 ## Licencia
 
-Pendiente de definir antes de la primera versión publicada.
+[MIT](LICENSE).

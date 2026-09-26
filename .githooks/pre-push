@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Bloquea el push hacia las ramas base (incluido HEAD:main desde otra rama). Los cambios entran por PR.
+while read -r local_ref local_sha remote_ref remote_sha; do
+  target=${remote_ref#refs/heads/}
+  if [[ $target =~ ^(main|master|develop|release/.+)$ ]]; then
+    echo "Push bloqueado hacia la rama base '$target'. Subir una rama propia y abrir un PR." >&2
+    exit 1
+  fi
+done
+exit 0

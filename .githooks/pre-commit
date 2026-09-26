@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Bloquea commits directos sobre las ramas base. Activar con: git config core.hooksPath .githooks
+branch=$(git symbolic-ref --short -q HEAD)
+if [[ $branch =~ ^(main|master|develop|release/.+)$ ]]; then
+  echo "Commit bloqueado: '$branch' es una rama base. Crear una rama propia (git switch -c feat/<tema>) y abrir un PR." >&2
+  exit 1
+fi

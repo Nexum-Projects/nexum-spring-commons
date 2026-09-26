@@ -3,3 +3,7 @@ target/
 .vscode/
 .DS_Store
 graphify-out/
+### Solo para el desarrollo local de cada persona ###
+# Bitácora de sesiones (handoff): ver INICIO.md
+handoff/
+# graphify-out/ (arriba): el grafo se genera en local con `graphify update .`

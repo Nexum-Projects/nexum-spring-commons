@@ -1,0 +1,34 @@
+package com.nexum.commons.autoconfigure;
+
+import com.nexum.commons.error.GlobalExceptionHandler;
+import com.nexum.commons.ratelimit.RateLimitFilter;
+import com.nexum.commons.ratelimit.RateLimitProperties;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+
+/**
+ * Registra el manejador de errores y el rate limit en aplicaciones servlet. Cada bean se reemplaza declarando
+ * uno propio del mismo tipo.
+ */
+@AutoConfiguration
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@EnableConfigurationProperties(RateLimitProperties.class)
+public class CommonsAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean
+    public GlobalExceptionHandler globalExceptionHandler() {
+        return new GlobalExceptionHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(name = "nexum.commons.rate-limit.enabled", havingValue = "true", matchIfMissing = true)
+    public RateLimitFilter rateLimitFilter(RateLimitProperties properties) {
+        return new RateLimitFilter(properties);
+    }
+}

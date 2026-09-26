@@ -19,14 +19,14 @@ usan responden igual.
 
 | Módulo | Paquete | Contenido |
 |---|---|---|
-| Errores | `com.nexum.commons.error` | `ErrorCode`, `BusinessException`, `NotFoundException`, `ErrorDTO` y un `GlobalExceptionHandler` que devuelve siempre el mismo formato de error |
+| Errores | `com.nexum.commons.error` | `ErrorCode`, `CommonErrorCode`, `BusinessException`, `NotFoundException`, `ErrorDTO` y un `GlobalExceptionHandler` que devuelve siempre el mismo formato de error |
 | Respuestas | `com.nexum.commons.response` | `PageDetailDTO` (un recurso), `PageDTO` (lista paginada), `ListDTO` (lista sin paginar) y `PageMetaDTO` |
 | Paginación | `com.nexum.commons.pagination` | Parámetros de consulta (`page`, `limit`, `order`, `orderBy`, `query`, `pagination`) con un tope de `limit`, y `Paging.find(...)` para armar un listado en una línea |
 | Búsqueda | `com.nexum.commons.search` | Especificaciones de Spring Data JPA para filtrar por estado y buscar texto sin distinguir acentos |
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
-Todos los módulos están **en desarrollo**.
+Estado: **errores** implementado; el resto, en desarrollo.
 
 ## Qué no incluye
 
@@ -66,8 +66,8 @@ de la aplicación:
 
 > Ejemplos del diseño. Se confirman con cada módulo terminado.
 
-**Códigos de error propios de cada aplicación.** El estado HTTP viaja con el código, así que no hace falta
-modificar el manejador de errores:
+**Códigos de error propios de cada aplicación.** El nombre del enum es el código que recibe el cliente y el estado
+HTTP viaja con el código, así que no hace falta modificar el manejador de errores:
 
 ```java
 public enum PurchaseErrorCode implements ErrorCode {
@@ -77,7 +77,6 @@ public enum PurchaseErrorCode implements ErrorCode {
 
     PurchaseErrorCode(HttpStatus status) { this.status = status; }
 
-    @Override public String code() { return name(); }
     @Override public HttpStatus httpStatus() { return status; }
 }
 

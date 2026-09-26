@@ -26,7 +26,7 @@ usan responden igual.
 | Rate limit | `com.nexum.commons.ratelimit` | Limitador de peticiones en memoria, configurable por propiedades |
 | Autoconfiguración | `com.nexum.commons.autoconfigure` | Registra el manejador de errores y el rate limit; cada bean se puede reemplazar |
 
-Estado: **errores**, **respuestas**, **paginación** y **búsqueda** implementados; el resto, en desarrollo.
+Estado: **errores**, **respuestas**, **paginación**, **búsqueda** y **rate limit** implementados; la autoconfiguración, en desarrollo.
 
 ## Qué no incluye
 
@@ -121,15 +121,21 @@ Specification<Product> spec = SearchSpecificationUtils.activeAndTextQuery(
         "isActive", true, params.getQuery(), params.getSearchableFields());
 ```
 
-**Configuración del rate limit:**
+**Rate limit.** Limita los `POST` bajo un prefijo por IP y ruta, y el login además por el email del cuerpo. Al
+superar el límite responde `429` con `Retry-After` y el formato de error estándar. Valores por defecto:
 
 ```properties
 nexum.commons.rate-limit.enabled=true
-nexum.commons.rate-limit.paths=/api/v1/auth/
+nexum.commons.rate-limit.path-prefix=/api/v1/auth/
+nexum.commons.rate-limit.excluded-paths=/api/v1/auth/change-password
+nexum.commons.rate-limit.login-path=/api/v1/auth/login
 nexum.commons.rate-limit.auth-limit=10
 nexum.commons.rate-limit.login-email-limit=5
 nexum.commons.rate-limit.window-seconds=60
 ```
+
+El contador vive en memoria: se pierde al reiniciar y no se comparte entre instancias. Detrás de un proxy, usar
+`server.forward-headers-strategy=native` para que la IP sea la del cliente.
 
 **Reemplazar un bean de la librería.** Si la aplicación define su propio `GlobalExceptionHandler`, el de la
 librería no se registra. Un `@RestControllerAdvice` propio con mayor prioridad también gana sobre el de la

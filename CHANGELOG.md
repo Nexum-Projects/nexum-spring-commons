@@ -7,6 +7,9 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ### Added
 
+- Módulo de rate limit (`com.nexum.commons.ratelimit`): `RateLimiter` (ventana fija en memoria), `RateLimitFilter`
+  (por IP y ruta, y el login además por email) y `RateLimitProperties` (`nexum.commons.rate-limit.*`), con el
+  prefijo protegido, las rutas excluidas y los límites configurables.
 - Módulo de búsqueda (`com.nexum.commons.search`): `SearchSpecificationUtils.activeAndTextQuery(...)` filtra por
   estado y busca texto en varios campos sin distinguir mayúsculas ni acentos (`unaccent` de PostgreSQL).
 - Módulo de paginación (`com.nexum.commons.pagination`): `BaseQueryParamsDTO` (con tope de `limit` en 100),

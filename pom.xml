@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.nexum</groupId>
 	<artifactId>nexum-spring-commons</artifactId>
-	<version>1.4.0</version>
+	<version>1.5.0-SNAPSHOT</version>
 	<name>nexum-spring-commons</name>
 	<description>Respuestas, paginación, manejo de errores, rate limit y búsqueda para APIs Spring Boot</description>
 	<url>https://github.com/Nexum-Projects/nexum-spring-commons</url>

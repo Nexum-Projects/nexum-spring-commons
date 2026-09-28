@@ -7,6 +7,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mock.http.MockHttpInputMessage;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
@@ -125,6 +127,16 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("CONFLICT_OPTIMISTIC_LOCK", response.getBody().code());
+    }
+
+    @Test
+    void unreadableBodyMapsTo400WithoutInternalDetails() {
+        ResponseEntity<ErrorDTO> response = handler.handleUnreadableBody(new HttpMessageNotReadableException(
+                "Cannot deserialize value of type `Level` from String \"ADMIN\"",
+                new MockHttpInputMessage(new byte[0])));
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(new ErrorDTO("BAD_REQUEST", "Malformed request body", 400, "BAD_REQUEST", null), response.getBody());
     }
 
     @Test

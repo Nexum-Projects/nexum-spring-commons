@@ -5,6 +5,11 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+### Fixed
+
+- Un cuerpo JSON mal formado o con un valor de enum desconocido responde 400 (`BAD_REQUEST`, `Malformed request body`)
+  en lugar de 500.
+
 ## [1.3.0] - 2026-09-26
 
 ### Added

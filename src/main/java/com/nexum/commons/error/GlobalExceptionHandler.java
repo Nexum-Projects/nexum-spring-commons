@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -72,6 +73,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
     public ResponseEntity<ErrorDTO> handleEndpointNotFound(Exception ex) {
         return build(CommonErrorCode.NOT_FOUND_RESOURCE, "Endpoint not found", null);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorDTO> handleUnreadableBody(HttpMessageNotReadableException ex) {
+        return build(CommonErrorCode.BAD_REQUEST, "Malformed request body", null);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

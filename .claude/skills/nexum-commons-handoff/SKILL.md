@@ -1,6 +1,6 @@
 ---
 name: nexum-commons-handoff
-description: "Use when closing a work session on nexum-spring-commons and handing off to the next one — 'haz el handoff', 'cerremos la sesión', 'deja el traspaso'. Verifies git, remote, hooks and SonarQube state before writing, creates handoff/ if missing, and saves handoff/handoff_AAAA-MM-DD-HHMM.md with the project's fixed skeleton, including failed attempts and ordered next steps."
+description: "Use when closing a work session on nexum-spring-commons and handing off to the next one — 'haz el handoff', 'cerremos la sesión', 'deja el traspaso'. Verifies git, remote, hooks and SonarQube state before writing, creates handoff/ if missing, and saves handoff/handoff_AAAA-MM-DD-HHMM.md with the project's fixed skeleton, including failed attempts, ordered next steps and a ready-to-paste kickoff message (commands, skills, scope, validation) for the next session."
 ---
 
 # Handoff de cierre de sesión — nexum-spring-commons
@@ -97,6 +97,8 @@ Qué quedó hecho y commiteado, qué está a medias. Una frase por hilo de traba
 - Rama y commits sobre `main`.
 - Árbol de trabajo: limpio o qué queda sin commit.
 - Remoto y PR abiertos (o "sin remoto").
+
+### Arranque de la sesión siguiente
 ```
 
 ## 4. Las secciones que más se usan
@@ -111,6 +113,30 @@ Qué quedó hecho y commiteado, qué está a medias. Una frase por hilo de traba
 interfaz, o que el orden de las claves JSON no es contrato).
 
 **Pendiente.** Primero lo que no depende de nadie. Si algo espera una decisión, decir de quién y cuál.
+
+**Arranque de la sesión siguiente.** Última sección del handoff. Se repite **tal cual** al final de la respuesta del
+chat, para copiarla sin abrir el archivo. Arranca el primer pendiente, no un resumen de la sesión:
+
+```markdown
+### Arranque de la sesión siguiente
+
+1. `cd <ruta del repositorio> && claude`
+2. `/inicio-nexum-commons` — carga `CLAUDE.md`, `INICIO.md` y `handoff/handoff_AAAA-MM-DD-HHMM.md`.
+3. Mensaje para pegar:
+
+> Continúa desde `handoff/handoff_AAAA-MM-DD-HHMM.md`. Objetivo: <una oración con el resultado esperado>.
+> Alcance mínimo: <lista corta>. Fuera de alcance: <lo que no se toca>.
+> Skills: <las que aplican, en orden — p. ej. /superpowers:brainstorming antes de implementar si hay algo que
+> diseñar; /nexum-commons-checks antes de dar por terminado; /nexum-commons-pr para el PR; /nexum-commons-handoff al
+> cerrar>.
+> Validación: <`./mvnw verify`, SonarQube, prueba en proyecto consumidor si cambia la API pública o el JSON>.
+> Restricciones: <rama propia; commit, push, merge y release con confirmación; nada de dominio en la librería>.
+```
+
+- Si el primer pendiente vive en otro repositorio (por ejemplo, migrar un consumidor), el `cd` y la skill de inicio
+  son los de ese repositorio.
+- Solo lo que la sesión siguiente necesita para empezar: el detalle vive en el handoff, el mensaje apunta a él.
+- Nombrar skills que existen, no inventar. Nunca secretos en el mensaje.
 
 ## 5. Reglas de redacción
 
@@ -132,3 +158,4 @@ interfaz, o que el orden de las claves JSON no es contrato).
    CHANGELOG en un commit (con confirmación).
 4. Si se cambió código: `graphify update .`.
 5. Confirmar que `git status --short` no muestra nada de `handoff/` (debe estar ignorado).
+6. Terminar la respuesta con la ruta del handoff y la sección "Arranque de la sesión siguiente", lista para copiar.

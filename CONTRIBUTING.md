@@ -9,7 +9,7 @@
 git clone https://github.com/Nexum-Projects/nexum-spring-commons.git
 cd nexum-spring-commons
 git config core.hooksPath .githooks   # activa los hooks del repositorio (una vez por clon)
-./mvnw verify                         # requiere JDK 17 y Docker
+./mvnw verify                         # requiere JDK 25 y Docker
 graphify update .                     # opcional: grafo local del código
 ```
 

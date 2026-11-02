@@ -36,7 +36,7 @@ datos. Esas piezas dependen de cada aplicación.
 
 ## Requisitos
 
-- Java 17 o superior.
+- Java 25 o superior.
 - Spring Boot 4.0.x (se compila contra 4.0.6).
 - La aplicación debe tener Spring Web MVC, Spring Data JPA y Spring Security (y Bean Validation para `@Username`). La librería los usa, pero no los
   arrastra como dependencias: la aplicación aporta las versiones que le corresponden.
@@ -220,7 +220,7 @@ Para quien contribuya:
 Para contribuir: [`CONTRIBUTING.md`](CONTRIBUTING.md) (ramas, hooks, commits, estándar de PR y skills de Claude Code).
 Para retomar el trabajo: [`INICIO.md`](INICIO.md). Reglas del proyecto: [`CLAUDE.md`](CLAUDE.md).
 
-Requisitos: JDK 17 y Docker (los tests de integración usan Testcontainers con PostgreSQL). Para el análisis
+Requisitos: JDK 25 y Docker (los tests de integración usan Testcontainers con PostgreSQL). Para el análisis
 estático, SonarQube con `SONAR_HOST_URL` y `SONAR_TOKEN` exportados; para el grafo del código, `graphify`.
 
 ```bash

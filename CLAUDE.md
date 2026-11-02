@@ -7,7 +7,7 @@ Ramas, hooks, commits y estándar de PR: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Qué es
 
-Librería Spring Boot 4 / Java 17 con respuestas, paginación, manejo de errores, búsqueda y rate limit para APIs
+Librería Spring Boot 4 / Java 25 con respuestas, paginación, manejo de errores, búsqueda y rate limit para APIs
 REST. Se distribuye por JitPack (`com.github.Nexum-Projects:nexum-spring-commons:<tag>`). Paquete base
 `com.nexum.commons`.
 

@@ -21,10 +21,10 @@
 		</license>
 	</licenses>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>25</java.version>
 		<sonar.projectKey>nexum-spring-commons</sonar.projectKey>
 		<sonar.projectName>nexum-spring-commons</sonar.projectName>
-		<sonar.java.source>17</sonar.java.source>
+		<sonar.java.source>25</sonar.java.source>
 		<sonar.exclusions>**/target/**,graphify-out/**</sonar.exclusions>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>

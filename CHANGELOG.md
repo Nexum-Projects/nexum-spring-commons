@@ -5,6 +5,11 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+### Changed
+
+- La librería compila para Java 25 (antes 17). Las aplicaciones que la usen necesitan Java 25 o
+  superior. CI y JitPack construyen con JDK 25.
+
 ## [1.4.0] - 2026-09-27
 
 ### Fixed

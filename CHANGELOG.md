@@ -5,6 +5,8 @@ Todos los cambios relevantes de la librería se anotan aquí. Formato basado en
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-11-01
+
 ### Changed
 
 - La librería compila para Java 25 (antes 17). Las aplicaciones que la usen necesitan Java 25 o
